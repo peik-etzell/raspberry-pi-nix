@@ -8,7 +8,7 @@
 final: prev:
 let
   # The version to stick at `pkgs.rpi-kernels.latest'
-  latest = "v6_1_73";
+  latest = "v6_1_73-rt22";
 
   # Helpers for building the `pkgs.rpi-kernels' map.
   rpi-kernel = { kernel, version, fw, wireless-fw, argsOverride ? null }:
@@ -68,60 +68,45 @@ in
   # `pkgs.rpi-kernels.<VERSION>.{kernel,firmware,wireless-firmware}'. 
   #
   # For example: `pkgs.rpi-kernels.v5_15_87.kernel'
-  rpi-kernels = rpi-kernels [
-    {
-      version = "6.1.73";
-      kernel = rpi-linux-6_1-src;
-      fw = rpi-firmware-src;
-      wireless-fw = import ./raspberrypi-wireless-firmware.nix {
-        bluez-firmware = rpi-bluez-firmware-src;
-        firmware-nonfree = rpi-firmware-nonfree-src;
-      };
-      argsOverride = {
-        structuredExtraConfig = with prev.lib.kernel; {
-          # The perl script to generate kernel options sets unspecified
-          # parameters to `m` if possible [1]. This results in the
-          # unspecified config option KUNIT [2] getting set to `m` which
-          # causes DRM_VC4_KUNIT_TEST [3] to get set to `y`.
-          #
-          # This vc4 unit test fails on boot due to a null pointer
-          # exception with the existing config. I'm not sure why, but in
-          # any case, the DRM_VC4_KUNIT_TEST config option itself states
-          # that it is only useful for kernel developers working on the
-          # vc4 driver. So, I feel no need to deviate from the standard
-          # rpi kernel and attempt to successfully enable this test and
-          # other unit tests because the nixos perl script has this
-          # sloppy "default to m" behavior. So, I set KUNIT to `n`.
-          #
-          # [1] https://github.com/NixOS/nixpkgs/blob/85bcb95aa83be667e562e781e9d186c57a07d757/pkgs/os-specific/linux/kernel/generate-config.pl#L1-L10
-          # [2] https://github.com/raspberrypi/linux/blob/1.20230405/lib/kunit/Kconfig#L5-L14
-          # [3] https://github.com/raspberrypi/linux/blob/bb63dc31e48948bc2649357758c7a152210109c4/drivers/gpu/drm/vc4/Kconfig#L38-L52
-          KUNIT = no;
+  rpi-kernels = rpi-kernels [{
+    version = "6.1.73-rt22";
+    kernel = rpi-linux-6_1-src;
+    fw = rpi-firmware-src;
+    wireless-fw = import ./raspberrypi-wireless-firmware.nix {
+      bluez-firmware = rpi-bluez-firmware-src;
+      firmware-nonfree = rpi-firmware-nonfree-src;
+    };
+    argsOverride = {
+      kernelPatches = [{
+        name = "rt";
+        patch = builtins.fetchurl {
+          url =
+            "https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.1/older/patch-6.1.73-rt22.patch.xz";
+          sha256 = "1hl7y2sab21l81nl165b77jhfjhpcc1gvz64fs2yjjp4q2qih4b0";
         };
+      }];
+      structuredExtraConfig = with prev.lib.kernel; {
+        # The perl script to generate kernel options sets unspecified
+        # parameters to `m` if possible [1]. This results in the
+        # unspecified config option KUNIT [2] getting set to `m` which
+        # causes DRM_VC4_KUNIT_TEST [3] to get set to `y`.
+        #
+        # This vc4 unit test fails on boot due to a null pointer
+        # exception with the existing config. I'm not sure why, but in
+        # any case, the DRM_VC4_KUNIT_TEST config option itself states
+        # that it is only useful for kernel developers working on the
+        # vc4 driver. So, I feel no need to deviate from the standard
+        # rpi kernel and attempt to successfully enable this test and
+        # other unit tests because the nixos perl script has this
+        # sloppy "default to m" behavior. So, I set KUNIT to `n`.
+        #
+        # [1] https://github.com/NixOS/nixpkgs/blob/85bcb95aa83be667e562e781e9d186c57a07d757/pkgs/os-specific/linux/kernel/generate-config.pl#L1-L10
+        # [2] https://github.com/raspberrypi/linux/blob/1.20230405/lib/kunit/Kconfig#L5-L14
+        # [3] https://github.com/raspberrypi/linux/blob/bb63dc31e48948bc2649357758c7a152210109c4/drivers/gpu/drm/vc4/Kconfig#L38-L52
+        KUNIT = no;
       };
-    }
-    {
-      version = "6.1.73-rt22";
-      kernel = rpi-linux-6_1-src;
-      fw = rpi-firmware-src;
-      wireless-fw = import ./raspberrypi-wireless-firmware.nix {
-        bluez-firmware = rpi-bluez-firmware-src;
-        firmware-nonfree = rpi-firmware-nonfree-src;
-      };
-      argsOverride = {
-        kernelPatches = [{
-          name = "rt";
-          patch = builtins.fetchurl {
-            url =
-              "https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.1/older/patch-6.1.73-rt22.patch.xz";
-            sha256 = "1hl7y2sab21l81nl165b77jhfjhpcc1gvz64fs2yjjp4q2qih4b0";
-          };
-        }];
-        structuredExtraConfig = with prev.lib.kernel; { KUNIT = no; };
-      };
-
-    }
-  ] // {
+    };
+  }] // {
     latest = final.rpi-kernels."${latest}";
   };
 }
