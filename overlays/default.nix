@@ -23,7 +23,7 @@ let
             patch = builtins.fetchurl {
               url =
                 "https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.1/older/patch-6.1.73-rt22.patch.xz";
-              sha256 = "0xq7s7v1vwgbjv1gmpn1mb5z6pxmdl3z8qhm2z9mjzbafs4g068x";
+              sha256 = "1hl7y2sab21l81nl165b77jhfjhpcc1gvz64fs2yjjp4q2qih4b0";
             };
           }];
         } // (if builtins.isNull argsOverride then { } else argsOverride);
