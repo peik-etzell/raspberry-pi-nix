@@ -3,7 +3,6 @@
 , rpi-firmware-src
 , rpi-firmware-nonfree-src
 , rpi-bluez-firmware-src
-, fetchurl
 , ...
 }:
 final: prev:
@@ -21,7 +20,7 @@ let
           modDirVersion = version;
           kernelPatches = [{
             name = "rt";
-            patch = fetchurl {
+            patch = builtins.fetchurl {
               url =
                 "https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.1/older/patch-6.1.64-rt17.patch.xz";
               sha = "";
