@@ -1,9 +1,9 @@
 { u-boot-src
 , rpi-linux-6_1-src
-, rt-patch-src
 , rpi-firmware-src
 , rpi-firmware-nonfree-src
 , rpi-bluez-firmware-src
+, fetchurl
 , ...
 }:
 final: prev:
@@ -21,7 +21,11 @@ let
           modDirVersion = version;
           kernelPatches = [{
             name = "rt";
-            patch = rt-patch-src;
+            patch = fetchurl {
+              url =
+                "https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.1/older/patch-6.1.64-rt17.patch.xz";
+              sha = "";
+            };
           }];
         } // (if builtins.isNull argsOverride then { } else argsOverride);
       };

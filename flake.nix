@@ -10,11 +10,6 @@
       flake = false;
       url = "github:raspberrypi/linux/stable_20231123";
     };
-    rt-patch-src = {
-      flake = false;
-      url =
-        "https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.1/older/patch-6.1.64-rt17.patch.gz";
-    };
     rpi-firmware-src = {
       flake = false;
       url =
