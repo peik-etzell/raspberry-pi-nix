@@ -1,5 +1,6 @@
 { u-boot-src
 , rpi-linux-6_1-src
+, rt-patch-src
 , rpi-firmware-src
 , rpi-firmware-nonfree-src
 , rpi-bluez-firmware-src
@@ -18,6 +19,10 @@ let
           src = kernel;
           inherit version;
           modDirVersion = version;
+          kernelPatches = {
+            name = "rt";
+            patch = rt-patch-src;
+          };
         } // (if builtins.isNull argsOverride then { } else argsOverride);
       };
       new-fw = prev.raspberrypifw.overrideAttrs (oldfw: { src = fw; });
