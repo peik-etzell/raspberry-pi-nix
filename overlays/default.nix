@@ -50,6 +50,7 @@ in
     patches = [ ];
     makeFlags = [ ];
     src = u-boot-src;
+    crossTools = true;
     # In raspberry pi sbcs the firmware manipulates the device tree in
     # a variety of ways before handing it off to the linux kernel. [1]
     # Since we have installed u-boot in place of a linux kernel we may
