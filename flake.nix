@@ -38,6 +38,7 @@
       flake = false;
       url = "github:raspberrypi/libpisp/v1.0.3";
     };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
   };
 
   outputs = srcs@{ self, ... }: {
