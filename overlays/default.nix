@@ -104,6 +104,12 @@ in
         # [2] https://github.com/raspberrypi/linux/blob/1.20230405/lib/kunit/Kconfig#L5-L14
         # [3] https://github.com/raspberrypi/linux/blob/bb63dc31e48948bc2649357758c7a152210109c4/drivers/gpu/drm/vc4/Kconfig#L38-L52
         KUNIT = no;
+
+        # https://github.com/mattywillo/linux_rpi4_rt-nix/blob/a4b231199897fb75a4715d2f70c97a948238a28d/packages/linux_rpi4_rt_5_15/default.nix
+        PREEMPT_RT = yes;
+        EXPERT = yes;
+        PREEMPT_VOLUNTARY = lib.mkForce no;
+        RT_GROUP_SCHED = lib.mkForce (option no);
       };
     };
   }] // {
