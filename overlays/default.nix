@@ -3,11 +3,13 @@
 , rpi-firmware-src
 , rpi-firmware-nonfree-src
 , rpi-bluez-firmware-src
-, lib
+, nixpkgs
 , ...
 }:
 final: prev:
 let
+  inherit (nixpkgs) lib;
+
   # The version to stick at `pkgs.rpi-kernels.latest'
   latest = "v6_1_73-rt22";
 
