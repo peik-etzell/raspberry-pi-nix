@@ -108,8 +108,8 @@ in
         # https://github.com/mattywillo/linux_rpi4_rt-nix/blob/a4b231199897fb75a4715d2f70c97a948238a28d/packages/linux_rpi4_rt_5_15/default.nix
         PREEMPT_RT = yes;
         EXPERT = yes;
-        PREEMPT_VOLUNTARY = lib.mkForce no;
-        RT_GROUP_SCHED = lib.mkForce (option no);
+        PREEMPT_VOLUNTARY = no;
+        RT_GROUP_SCHED = option no;
       };
     };
   }] // {
