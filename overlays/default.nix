@@ -50,7 +50,6 @@ in
     patches = [ ];
     makeFlags = [ ];
     src = u-boot-src;
-    crossTools = true;
     # In raspberry pi sbcs the firmware manipulates the device tree in
     # a variety of ways before handing it off to the linux kernel. [1]
     # Since we have installed u-boot in place of a linux kernel we may
@@ -109,7 +108,7 @@ in
         # [3] https://github.com/raspberrypi/linux/blob/bb63dc31e48948bc2649357758c7a152210109c4/drivers/gpu/drm/vc4/Kconfig#L38-L52
         KUNIT = no;
 
-        # https://github.com/mattywillo/linux_rpi4_rt-nix/blob/a4b231199897fb75a4715d2f70c97a948238a28d/packages/linux_rpi4_rt_5_15/default.nix
+        # https://github.com/NixOS/nixpkgs/blob/2230a20f2b5a14f2db3d7f13a2dc3c22517e790b/pkgs/os-specific/linux/kernel/linux-rt-6.1.nix
         PREEMPT_RT = yes;
         EXPERT = yes;
         PREEMPT_VOLUNTARY = lib.mkForce no;
